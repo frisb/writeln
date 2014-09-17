@@ -85,7 +85,7 @@ module.exports = class Writeln
 
 		if (metadata)
 			if (typeof(metadata) isnt 'string')
-				mtext = JSON.stringify(metadata)
+				mtext = surreal.serialize(metadata)
 			else
 				mtext = metadata
 				mtext = '     ' + mtext.replace(/\n/g, '\n     ')
