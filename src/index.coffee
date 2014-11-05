@@ -73,7 +73,8 @@ module.exports = class Writeln
 	info: (text, metadata) -> @write(' * ', text, metadata)
 	data: (text, metadata) -> @write(' ~ ', text, metadata)
 	warn: (text, metadata) -> @write(' ! ', text, metadata)
-	debug: (text, metadata) -> @write(' ? ', text, metadata)
+	debug: (text, metadata) ->
+    @write(' ? ', text, metadata) if !process.env.NODE_ENV || process.env.NODE_ENV isnt 'production'
 	error: (text, metadata) -> @write(' x ', text, metadata)
 
 	write: (level, text, metadata) ->
