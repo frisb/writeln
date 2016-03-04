@@ -1,6 +1,7 @@
 'use strict';
-var Writeln = require('../lib/index');
-var writeln = new Writeln('Unit-Tests')
+var Writeln = require('../lib/index').default;
+
+var writeln = new Writeln('Unit-Tests');
 
 describe('Writeln', function () {
 	it('should log as info', function (done) {

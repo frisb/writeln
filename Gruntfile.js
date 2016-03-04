@@ -12,10 +12,6 @@ module.exports = function (grunt) {
       es6: ['src/**/*.js']
     },
     babel: {
-      options: {
-        blacklist: ['strict'],
-        sourceMap: false
-      },
       compile: {
         files: [
           {

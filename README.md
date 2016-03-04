@@ -4,7 +4,7 @@
 [![Code Climate](https://codeclimate.com/github/frisb/atomicrecord/badges/gpa.svg)](https://codeclimate.com/github/frisb/writeln)
 [![npm version](https://badge.fury.io/js/atomicrecord.svg)](http://badge.fury.io/js/writeln)
 
-Writeln is an Object aliasing module for server and client.
+Writeln is a simple logger based on debug.
 
 This module is still early alpha and work is in progress. All contributions are welcome.
 
