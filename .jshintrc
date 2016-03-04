@@ -1,0 +1,14 @@
+{
+  "node": true,
+  "esnext": true,
+  "bitwise": false,
+  "curly": false,
+  "immed": true,
+  "newcap": true,
+  "noarg": true,
+  "undef": false,
+  "unused": false,
+  "strict": false,
+  "laxcomma" : true,
+  "laxbreak": true
+}
