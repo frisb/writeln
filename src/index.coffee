@@ -1,3 +1,4 @@
+chalk = require('chalk')
 surreal = require('surreal')
 winston = require('winston')
 
@@ -59,13 +60,14 @@ logger = new (winston.Logger)(options)
 logger.exitOnError = false
 
 hr = (len, end) ->
-	str = '\n' + (if end then '' else '     ')
-	len = 75 if len > 75
-	str += '-' for i in [0..len + (if end then 5 else 0)]
-	"#{str}\n"
+	# str = '\n' + (if end then '' else '     ')
+	# len = 75 if len > 75
+	# str += '-' for i in [0..len + (if end then 5 else 0)]
+	# "#{str}\n"
+	''
 
 module.exports = class Writeln
-	constructor: (@category) ->
+	constructor: (@category, @color) ->
     @history = []
 
 	silly: (text, metadata) -> @write(':) ', text, metadata)
@@ -82,7 +84,7 @@ module.exports = class Writeln
 		date = dateStr(now, '-')
 		time = timeStr(now)
 
-		text = "#{date} | #{time} | #{@formatCategory()} | #{text}"
+		text = chalk.dim("#{date} #{time}") + " | #{@formatCategory()} | #{text}"
 
 		if (metadata)
 			if (typeof(metadata) isnt 'string')
@@ -91,7 +93,7 @@ module.exports = class Writeln
 				mtext = metadata
 				mtext = '     ' + mtext.replace(/\n/g, '\n     ')
 
-			text = text + hr(text.length) + mtext + hr(text.length, true)
+			text = text + hr(text.length) + chalk.dim(mtext) + hr(text.length, true)
 
 		logger[level](text)
 		@history.push(text)
@@ -109,4 +111,4 @@ module.exports = class Writeln
 		else
 			str += ' ' for i in [0...maxCategoryLength - str.length]
 
-		str
+		str = if @color then chalk[@color](str) else str

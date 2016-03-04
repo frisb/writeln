@@ -13,6 +13,7 @@
     "node": ">= 0.8.x"
   },
   "dependencies": {
+    "chalk": "^0.5.1",
     "surreal": "^0.1.0",
     "winston": "^0.8.0"
   },
