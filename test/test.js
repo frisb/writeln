@@ -1,5 +1,5 @@
 'use strict';
-var Writeln = require('../lib/index').default;
+var Writeln = require('../lib/index');
 
 var writeln = new Writeln('Unit-Tests');
 

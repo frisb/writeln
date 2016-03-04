@@ -63,7 +63,7 @@ function colorize(color, text) {
 
 let maxCategoryLength = 0;
 
-export default class Writeln {
+class Writeln {
 	constructor(category) {
 		this.category = category;
 		this.history = [];
@@ -137,3 +137,5 @@ export default class Writeln {
 		return str;
 	}
 }
+
+module.exports = Writeln;
