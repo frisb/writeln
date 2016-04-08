@@ -19,7 +19,7 @@ debug.colors.forEach(function (num, index) {
 		debug.colors.splice(index, 1);
 });
 
-debug.enable('*:info,*:debug,*:error,*:warn');
+debug.enable('error warn info debug');
 
 function pad(num, len, char) {
 	if (typeof(num) !== 'string') num = `${num}`;
@@ -56,17 +56,40 @@ function timeStr(date, delimiter) {
 	return pad(date.getHours()) + delimiter + pad(date.getMinutes()) + delimiter + pad(date.getSeconds()) + delimiter + millisec;
 }
 
-function colorize(color, text) {
-	return `\u001b[3${color};1m${text}\u001b[0m`;
+//function colorize(color, text) {
+//	return `\u001b[3${color};1m${text}\u001b[0m`;
+//}
+
+function getColor(level) {
+	switch (level) {
+		// case 'info':
+		// 	return color.cyan;
+		// case 'debug':
+		// 	return color.green;
+		// case 'warn':
+		// 	return color.yellow;
+		case 'error':
+			return color.red;
+		default:
+			break;
+	}
 }
 
 
-let maxCategoryLength = 0;
+// let maxCategoryLength = 0;
+
+let log = {
+	debug: debug('debug'),
+	info: debug('info'),
+	warn: debug('warn'),
+	error: debug('error')
+};
 
 class Writeln {
 	constructor(category) {
 		this.category = category;
 		this.history = [];
+		this.category = this.formatCategory();
 	}
 
 	info(text, metadata) {
@@ -92,23 +115,24 @@ class Writeln {
 		let timestamp = `${date} ${time}`;
 		let mtext = '';
 
-		let log = debug(`${this.formatCategory(level)}`);
+		let color = getColor(level);
 
-		if (level === 'error')
-			log.color = 1;
+		if (color)
+			log.color = color;
 
 		if (metadata) {
 			if (typeof(metadata) !== 'string') {
-				mtext = '\n' + util.inspect(metadata, { showHidden: true, depth: null, colors: true });
-				mtext = mtext.replace(/\n/g, '\n  ');
+				mtext = '\n' + chalk.dim(util.inspect(metadata, { showHidden: true, depth: null, colors: true })) + '\n';
+
 			}
 			else {
-				mtext = metadata;
-				mtext = '     ' + mtext.replace(/\n/g, '\n     ');
+				mtext = `${metadata}`;
 			}
+
+			mtext = mtext.replace(/\n/g, '\n  ');
 		}
 
-		log(text, chalk.dim(timestamp), chalk.dim(mtext));
+		log[level](`${chalk.dim(this.category)} ${text}`, chalk.dim(timestamp), mtext);
 
 		this.history.push(text);
 	}
@@ -123,16 +147,16 @@ class Writeln {
 		return str;
 	}
 
-	formatCategory(level) {
-		let str = this.category.replace(/ /g, '-').toLowerCase() + ':' + level;
-		let len = 2 + str.length;
-
-		if (len >= maxCategoryLength) {
-			maxCategoryLength = len;
-		}
-		else {
-			str += pad('', maxCategoryLength - len, ' ');
-		}
+	formatCategory() {
+		let str = this.category.replace(/ /g, '-').toLowerCase();
+		// let len = 2 + str.length;
+		//
+		// if (len >= maxCategoryLength) {
+		// 	maxCategoryLength = len;
+		// }
+		// else {
+		// 	str += pad('', maxCategoryLength - len, ' ');
+		// }
 
 		return str;
 	}

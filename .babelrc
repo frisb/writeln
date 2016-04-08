@@ -1,4 +1,8 @@
 {
-  "sourceMaps": false,
-  "presets": ["es2015"]
+  "sourceMaps": true,
+  "presets": ["es2015"],
+  "plugins": [
+    "transform-runtime",
+    "add-module-exports"
+  ]
 }

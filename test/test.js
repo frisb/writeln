@@ -9,13 +9,13 @@ describe('Writeln', function () {
 		done();
 	});
 
-	it('should log as warn', function (done) {
-		writeln.warn('This is a warning message');
+	it('should log as debug', function (done) {
+		writeln.debug('This is a debug message');
 		done();
 	});
 
-	it('should log as debug', function (done) {
-		writeln.debug('This is a debug message');
+	it('should log as warn', function (done) {
+		writeln.warn('This is a warning message');
 		done();
 	});
 
