@@ -88,13 +88,11 @@ let log = {
 class Writeln {
 	constructor(category) {
 		this.category = category;
-		this.history = [];
+		// this.history = [];
 		this.category = this.formatCategory();
 	}
 
 	info(text, metadata) {
-		console.log(this);
-
 		this.write('info', text, metadata);
 	}
 
@@ -136,18 +134,18 @@ class Writeln {
 
 		log[level](`${chalk.dim(this.category)} ${text}`, chalk.dim(timestamp), mtext);
 
-		this.history.push(text);
+		// this.history.push(text);
 	}
 
-	repeatHistory() {
-		let str = '';
-
-		for (let i = 0, len = this.history.length; i < len; i++) {
-			str += this.history[i];
-		}
-
-		return str;
-	}
+	// repeatHistory() {
+	// 	let str = '';
+	//
+	// 	for (let i = 0, len = this.history.length; i < len; i++) {
+	// 		str += this.history[i];
+	// 	}
+	//
+	// 	return str;
+	// }
 
 	formatCategory() {
 		let str = this.category.replace(/ /g, '-').toLowerCase();
