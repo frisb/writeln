@@ -1,10 +1,7 @@
 {
   "sourceMaps": true,
+  "presets": ["es2015"],
   "plugins": [
-    "check-es2015-constants",
-    "transform-es2015-block-scoping",
-    "transform-es2015-classes",
-    "transform-es2015-modules-umd",
     "add-module-exports"
   ]
 }

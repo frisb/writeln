@@ -93,6 +93,8 @@ class Writeln {
 	}
 
 	info(text, metadata) {
+		console.log(this);
+
 		this.write('info', text, metadata);
 	}
 
