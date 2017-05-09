@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "./lib",
+    "inlineSources": false,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "rootDir": "./src",
+    "outDir": "./lib",
+    "sourceMap": false,
+    "target": "es5",
+    "watch": false
+  }
+}

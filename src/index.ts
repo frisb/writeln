@@ -1,6 +1,6 @@
-let chalk = require('chalk');
-let debug = require('debug');
-let util = require('util');
+import {dim} from 'chalk';
+import {inspect} from 'util';
+import * as debug from 'debug';
 
 const color = {
 	black :   0,
@@ -13,7 +13,7 @@ const color = {
 	white :   7
 };
 
-debug.colors.forEach(function (num, index) {
+debug.colors.forEach(function (num: number, index: number) {
 	// remove red
 	if (num === color.red)
 		debug.colors.splice(index, 1);
@@ -21,7 +21,7 @@ debug.colors.forEach(function (num, index) {
 
 debug.enable('error warn info debug');
 
-function pad(num, len, char) {
+function pad(num: number | string, len?: number, char?: string): string {
 	if (typeof(num) !== 'string') num = `${num}`;
 	if (!len) len = 2;
 	if (num.length >= len)
@@ -37,18 +37,12 @@ function pad(num, len, char) {
 	return `${padding}${num}`;
 }
 
-function dateStr(date, delimiter) {
-	if (!delimiter)
-		delimiter = '.';
-
+function dateStr(date: Date, delimiter: string = '.'): string {
 	return date.getFullYear() + delimiter + pad(date.getMonth() + 1) + delimiter + pad(date.getDate());
 }
 
-function timeStr(date, delimiter) {
-	if (!delimiter)
-		delimiter = ':';
-
-	let millisec = date.getMilliseconds();
+function timeStr(date: Date, delimiter: string = ':'): string {
+	let millisec: number | string = date.getMilliseconds();
 
 	if (millisec < 100)
 		millisec = '0' + pad(millisec);
@@ -60,69 +54,74 @@ function timeStr(date, delimiter) {
 //	return `\u001b[3${color};1m${text}\u001b[0m`;
 //}
 
-function getColor(level) {
-	switch (level) {
-		// case 'info':
-		// 	return color.cyan;
-		// case 'debug':
-		// 	return color.green;
-		// case 'warn':
-		// 	return color.yellow;
-		case 'error':
-			return color.red;
-		default:
-			break;
-	}
-}
-
+// function getColor(level: string): number {
+// 	switch (level) {
+// 		// case 'info':
+// 		// 	return color.cyan;
+// 		// case 'debug':
+// 		// 	return color.green;
+// 		// case 'warn':
+// 		// 	return color.yellow;
+// 		case 'error':
+// 			return color.red;
+// 		default:
+// 			break;
+// 	}
+// }
 
 // let maxCategoryLength = 0;
 
-let log = {
+interface ILogWriter {
+	[level: string]: (categoryAndText: string, timestamp: string, mtext: string) => void;
+
+}
+
+let log: ILogWriter = {
 	debug: debug('debug'),
 	info: debug('info'),
 	warn: debug('warn'),
 	error: debug('error')
 };
 
-class Writeln {
-	constructor(category) {
-		this.category = category;
+export class Writeln {
+	public static Writeln = Writeln;
+
+	constructor(private category: string) {
 		// this.history = [];
 		this.category = this.formatCategory();
 	}
 
-	info(text, metadata) {
+	public info(text: string, metadata?: any) {
 		this.write('info', text, metadata);
 	}
 
-	warn(text, metadata) {
+	public warn(text: string, metadata?: any) {
 		this.write('warn', text, metadata);
 	}
 
-	debug(text, metadata) {
+	public debug(text: string, metadata?: any) {
 		this.write('debug', text, metadata);
 	}
 
-	error(text, metadata) {
+	public error(text: string, metadata?: any) {
 		this.write('error', text, metadata);
 	}
 
-	write(level, text, metadata) {
+	protected write(level: string, text: string, metadata: any) {
 		let now = new Date();
 		let date = dateStr(now, '-');
 		let time = timeStr(now);
 		let timestamp = `${date} ${time}`;
 		let mtext = '';
 
-		let color = getColor(level);
+		// let color = getColor(level);
 
-		if (color)
-			log.color = color;
+		// if (color)
+		// 	log.color = color;
 
 		if (metadata) {
 			if (typeof(metadata) !== 'string') {
-				mtext = '\n' + chalk.dim(util.inspect(metadata, { showHidden: true, depth: null, colors: true })) + '\n';
+				mtext = '\n' + dim(inspect(metadata, { showHidden: true, depth: null, colors: true })) + '\n';
 
 			}
 			else {
@@ -132,7 +131,7 @@ class Writeln {
 			mtext = mtext.replace(/\n/g, '\n  ');
 		}
 
-		log[level](`${chalk.dim(this.category)} ${text}`, chalk.dim(timestamp), mtext);
+		log[level](`${dim(this.category)} ${text}`, dim(timestamp), mtext);
 
 		// this.history.push(text);
 	}
@@ -147,7 +146,7 @@ class Writeln {
 	// 	return str;
 	// }
 
-	formatCategory() {
+	private formatCategory(): string {
 		let str = this.category.replace(/ /g, '-').toLowerCase();
 		// let len = 2 + str.length;
 		//
@@ -161,5 +160,3 @@ class Writeln {
 		return str;
 	}
 }
-
-module.exports = Writeln;

@@ -5,24 +5,14 @@ module.exports = function (grunt) {
         src: ['lib']
       }
     },
-    jshint: {
-      options: {
-        jshintrc: true
-      },
-      es6: ['src/**/*.js']
-    },
-    babel: {
-      compile: {
-        files: [
-          {
-            expand: true,
-            cwd: 'src',
-            src: '**/*.js',
-            dest: 'lib'
-          }
-        ]
-      }
-    },
+		ts: {
+			compile : {
+				tsconfig: true,
+        options: {
+					fast: 'never'
+				}
+			}
+		},
     mochaTest: {
       modularize: {
         options: {
@@ -34,9 +24,8 @@ module.exports = function (grunt) {
   });
 
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-babel');
+  grunt.loadNpmTasks('grunt-ts');
   grunt.loadNpmTasks('grunt-mocha-test');
 
-  grunt.registerTask('default', ['clean', 'jshint', 'babel', 'mochaTest']);
+  grunt.registerTask('default', ['clean', 'ts', 'mochaTest']);
 };
