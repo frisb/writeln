@@ -2,24 +2,26 @@ import {dim} from 'chalk';
 import {inspect} from 'util';
 import * as debug from 'debug';
 
-const color = {
-	black :   0,
-	red :     1,
-	green :   2,
-	yellow :  3,
-	blue :    4,
-	magenta : 5,
-	cyan :    6,
-	white :   7
-};
+// const color = {
+// 	black :   0,
+// 	red :     1,
+// 	green :   2,
+// 	yellow :  3,
+// 	blue :    4,
+// 	magenta : 5,
+// 	cyan :    6,
+// 	white :   7
+// };
 
-debug.colors.forEach(function (num: number, index: number) {
-	// remove red
-	if (num === color.red)
-		debug.colors.splice(index, 1);
-});
+// debug.colors.forEach(function (num: number, index: number) {
+// 	// remove red
+// 	if (num === color.red)
+// 		debug.colors.splice(index, 1);
+// });
 
-debug.enable('error warn info debug');
+let lastCategory: string;
+
+debug.enable('*');
 
 function pad(num: number | string, len?: number, char?: string): string {
 	if (typeof(num) !== 'string') num = `${num}`;
@@ -50,47 +52,17 @@ function timeStr(date: Date, delimiter: string = ':'): string {
 	return pad(date.getHours()) + delimiter + pad(date.getMinutes()) + delimiter + pad(date.getSeconds()) + delimiter + millisec;
 }
 
-//function colorize(color, text) {
-//	return `\u001b[3${color};1m${text}\u001b[0m`;
-//}
-
-// function getColor(level: string): number {
-// 	switch (level) {
-// 		// case 'info':
-// 		// 	return color.cyan;
-// 		// case 'debug':
-// 		// 	return color.green;
-// 		// case 'warn':
-// 		// 	return color.yellow;
-// 		case 'error':
-// 			return color.red;
-// 		default:
-// 			break;
-// 	}
-// }
-
-// let maxCategoryLength = 0;
-
-interface ILogWriter {
-	[level: string]: (categoryAndText: string, timestamp: string, mtext: string) => void;
-
-}
-
-let log: ILogWriter = {
-	debug: debug('debug'),
-	info: debug('info'),
-	warn: debug('warn'),
-	error: debug('error')
-};
-
 export class Writeln {
 	public static Writeln = Writeln;
 
-	constructor(private category: string) {
-		// this.history = [];
-		this.category = this.formatCategory();
-	}
+	private log: debug.IDebugger;
 
+	constructor(private category: string) {
+		this.category = category.replace(/ /g, '-').toLowerCase();
+
+		this.log = debug(this.category);
+	}
+	
 	public info(text: string, metadata?: any) {
 		this.write('info', text, metadata);
 	}
@@ -114,49 +86,24 @@ export class Writeln {
 		let timestamp = `${date} ${time}`;
 		let mtext = '';
 
-		// let color = getColor(level);
-
-		// if (color)
-		// 	log.color = color;
-
 		if (metadata) {
 			if (typeof(metadata) !== 'string') {
-				mtext = '\n' + dim(inspect(metadata, { showHidden: true, depth: null, colors: true })) + '\n';
-
+				mtext = inspect(metadata, { showHidden: true, depth: null, colors: true });
 			}
 			else {
-				mtext = `${metadata}`;
+				mtext = metadata;
 			}
 
-			mtext = mtext.replace(/\n/g, '\n  ');
+			mtext = `\n${mtext}\n`;
+
+			mtext = `\n${dim(mtext.replace(/\n/g, '\n  '))}\n`;
 		}
 
-		log[level](`${dim(this.category)} ${text}`, dim(timestamp), mtext);
+		if (this.log.enabled && lastCategory && lastCategory !== this.category)
+        console.log();
 
-		// this.history.push(text);
-	}
+		this.log(`${text}`, dim(timestamp), mtext);
 
-	// repeatHistory() {
-	// 	let str = '';
-	//
-	// 	for (let i = 0, len = this.history.length; i < len; i++) {
-	// 		str += this.history[i];
-	// 	}
-	//
-	// 	return str;
-	// }
-
-	private formatCategory(): string {
-		let str = this.category.replace(/ /g, '-').toLowerCase();
-		// let len = 2 + str.length;
-		//
-		// if (len >= maxCategoryLength) {
-		// 	maxCategoryLength = len;
-		// }
-		// else {
-		// 	str += pad('', maxCategoryLength - len, ' ');
-		// }
-
-		return str;
+		lastCategory = this.category;
 	}
 }
