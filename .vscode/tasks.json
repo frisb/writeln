@@ -9,7 +9,7 @@
 			"taskName": "default",
 			"args": [],
 			"isBuildCommand": true,
-			"isWatching": false,
+			"isBackground": true,
 			"problemMatcher": [
 				"$lessCompile",
 				"$tsc",

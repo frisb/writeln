@@ -14,7 +14,7 @@ module.exports = function (grunt) {
 			}
 		},
     mochaTest: {
-      modularize: {
+      writeln: {
         options: {
           reporter: 'spec'
         },

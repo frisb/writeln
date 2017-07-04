@@ -21,7 +21,7 @@ import * as debug from 'debug';
 
 let lastCategory: string;
 
-debug.enable('*');
+// debug.enable('*');
 
 function pad(num: number | string, len?: number, char?: string): string {
 	if (typeof(num) !== 'string') num = `${num}`;
