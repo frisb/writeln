@@ -1,7 +1,7 @@
 {
   "name": "writeln",
   "description": "Simple console logger",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "contributors": [
     {
       "name": "Ashley Brener",
