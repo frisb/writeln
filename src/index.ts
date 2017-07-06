@@ -69,9 +69,9 @@ export class Writeln {
 				if (!split[i]) continue; // ignore empty strings
 				namespaces = split[i].replace(/\*/g, '.*?');
 				if (namespaces[0] === '-') {
-					DEBUG += ' -' + namespaces;
-				} else {
 					DEBUG += ' ' + namespaces;
+				} else {
+					DEBUG += ' -' + namespaces;
 				}
 			}
 
