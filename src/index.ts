@@ -21,8 +21,6 @@ import * as debug from 'debug';
 
 let lastCategory: string;
 
-// debug.enable('*');
-
 function pad(num: number | string, len?: number, char?: string): string {
 	if (typeof(num) !== 'string') num = `${num}`;
 	if (!len) len = 2;
@@ -54,6 +52,10 @@ function timeStr(date: Date, delimiter: string = ':'): string {
 
 export class Writeln {
 	public static Writeln = Writeln;
+
+	public static enable(namespaces: string) {
+		debug.enable(namespaces);
+	}
 
 	private log: debug.IDebugger;
 
