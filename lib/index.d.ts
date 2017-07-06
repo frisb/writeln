@@ -2,6 +2,7 @@ export declare class Writeln {
     private category;
     static Writeln: typeof Writeln;
     static enable(namespaces: string): void;
+    static disable(namespaces: string): void;
     private log;
     constructor(category: string);
     info(text: string, metadata?: any): void;

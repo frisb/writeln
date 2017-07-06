@@ -57,6 +57,28 @@ export class Writeln {
 		debug.enable(namespaces);
 	}
 
+	public static disable(namespaces: string) {
+		if (namespaces) {
+			let { DEBUG } = process.env;
+
+			DEBUG = DEBUG || '';
+
+			let split = (typeof namespaces === 'string' ? namespaces : '').split(/[\s,]+/);
+			
+			for (let i = 0, { length } = split; i < length; i++) {
+				if (!split[i]) continue; // ignore empty strings
+				namespaces = split[i].replace(/\*/g, '.*?');
+				if (namespaces[0] === '-') {
+					DEBUG += ' -' + namespaces;
+				} else {
+					DEBUG += ' ' + namespaces;
+				}
+			}
+
+			debug.enable(DEBUG);
+		}
+	}
+
 	private log: debug.IDebugger;
 
 	constructor(private category: string) {
