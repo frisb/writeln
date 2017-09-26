@@ -1,5 +1,5 @@
-import {dim} from 'chalk';
-import {inspect} from 'util';
+import { dim } from 'chalk';
+import { inspect } from 'util';
 import * as debug from 'debug';
 
 // const color = {
@@ -22,7 +22,7 @@ import * as debug from 'debug';
 let lastCategory: string;
 
 function pad(num: number | string, len?: number, char?: string): string {
-	if (typeof(num) !== 'string') num = `${num}`;
+	if (typeof(num) !== 'string') num = `${ num }`;
 	if (!len) len = 2;
 	if (num.length >= len)
 		return num;
@@ -34,7 +34,7 @@ function pad(num: number | string, len?: number, char?: string): string {
 		padding += char || '0';
 	}
 
-	return `${padding}${num}`;
+	return `${ padding }${ num }`;
 }
 
 function dateStr(date: Date, delimiter: string = '.'): string {
@@ -64,7 +64,7 @@ export class Writeln {
 			DEBUG = DEBUG || '';
 
 			let split = (typeof namespaces === 'string' ? namespaces : '').split(/[\s,]+/);
-			
+
 			for (let i = 0, { length } = split; i < length; i++) {
 				if (!split[i]) continue; // ignore empty strings
 				namespaces = split[i].replace(/\*/g, '.*?');
@@ -86,7 +86,7 @@ export class Writeln {
 
 		this.log = debug(this.category);
 	}
-	
+
 	public info(text: string, metadata?: any) {
 		this.write('info', text, metadata);
 	}
@@ -107,7 +107,7 @@ export class Writeln {
 		let now = new Date();
 		let date = dateStr(now, '-');
 		let time = timeStr(now);
-		let timestamp = `${date} ${time}`;
+		let timestamp = `${ date } ${ time }`;
 		let mtext = '';
 
 		if (metadata) {
@@ -118,7 +118,7 @@ export class Writeln {
 				mtext = metadata;
 			}
 
-			mtext = `\n${mtext}\n`;
+			mtext = `\n${ mtext }\n`;
 
 			mtext = `\n${dim(mtext.replace(/\n/g, '\n  '))}\n`;
 		}
