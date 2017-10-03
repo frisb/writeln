@@ -1,7 +1,7 @@
 {
   "name": "writeln",
   "description": "Simple console logger",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "contributors": [
     {
       "name": "Ashley Brener",
@@ -10,9 +10,6 @@
   ],
   "main": "/",
   "types": "./lib/index.d.ts",
-  "engines": {
-    "node": ">= 0.8.x"
-  },
   "dependencies": {
     "@types/chalk": "^0.4.31",
     "@types/debug": "0.0.30",
