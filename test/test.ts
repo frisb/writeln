@@ -1,4 +1,4 @@
-import { Logger } from '../src';
+import { Logger } from '../';
 
 const logger = new Logger('Unit-Tests');
 

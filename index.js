@@ -1,1 +1,1 @@
-module.exports = require('./lib');
+exports.Logger = require('./lib').Logger;
