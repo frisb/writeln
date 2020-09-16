@@ -3,6 +3,7 @@
     "declaration": true,
     "declarationDir": "./lib",
     "inlineSources": false,
+    "esModuleInterop": true,
     "module": "commonjs",
     "moduleResolution": "node",
     "noImplicitAny": true,
@@ -11,5 +12,6 @@
     "sourceMap": false,
     "target": "es5",
     "watch": false
-  }
+  },
+  "exclude": ["node_modules", "test"]
 }

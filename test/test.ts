@@ -1,9 +1,6 @@
-'use strict';
-const Writeln = require('../index');
+import { Logger } from '../src';
 
-Writeln.enable('*');
-
-const logger = new Writeln('Unit-Tests');
+const logger = new Logger('Unit-Tests');
 
 describe('Writeln', function () {
 	it('should log as info', function (done) {

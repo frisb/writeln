@@ -1,133 +1,44 @@
-import { dim } from 'chalk';
-import { inspect } from 'util';
-import * as debug from 'debug';
+import debug, { IDebugger } from 'debug';
 
-// const color = {
-// 	black :   0,
-// 	red :     1,
-// 	green :   2,
-// 	yellow :  3,
-// 	blue :    4,
-// 	magenta : 5,
-// 	cyan :    6,
-// 	white :   7
-// };
-
-// debug.colors.forEach(function (num: number, index: number) {
-// 	// remove red
-// 	if (num === color.red)
-// 		debug.colors.splice(index, 1);
-// });
-
-let lastCategory: string;
-
-function pad(num: number | string, len?: number, char?: string): string {
-	if (typeof(num) !== 'string') num = `${ num }`;
-	if (!len) len = 2;
-	if (num.length >= len)
-		return num;
-
-	let padding = '';
-
-	len = len - num.length;
-	for (let i = 0; i < len; i++) {
-		padding += char || '0';
-	}
-
-	return `${ padding }${ num }`;
+interface ILog extends IDebugger {
+	extend(namespace: string): IDebugger;
 }
 
-function dateStr(date: Date, delimiter: string = '.'): string {
-	return date.getFullYear() + delimiter + pad(date.getMonth() + 1) + delimiter + pad(date.getDate());
-}
+debug.enable('*:info,*:warn,*:error,*:debug');
 
-function timeStr(date: Date, delimiter: string = ':'): string {
-	let millisec: number | string = date.getMilliseconds();
+const isNode = new Function('try {return this===global;}catch(e){return false;}');
 
-	if (millisec < 100)
-		millisec = '0' + pad(millisec);
+export class Logger {
+	public static isDebug = isNode() && process.env.NODE_ENV !== 'production';
 
-	return pad(date.getHours()) + delimiter + pad(date.getMinutes()) + delimiter + pad(date.getSeconds()) + delimiter + millisec;
-}
+	private readonly _infoLogger: IDebugger;
+	private readonly _debugLogger: IDebugger;
+	private readonly _warnLogger: IDebugger;
+	private readonly _errorLogger: IDebugger;
 
-export class Writeln {
-	public static Writeln = Writeln;
+	constructor(name: string) {
+		name = name.replace(/\s+/g, '-').toLowerCase();
+		const log = debug(name) as ILog;
 
-	public static enable(namespaces: string) {
-		debug.enable(namespaces);
+		this._infoLogger = log.extend('info');
+		this._warnLogger = log.extend('warn');
+		this._errorLogger = log.extend('error');
+		this._debugLogger = log.extend('debug');
 	}
 
-	public static disable(namespaces: string) {
-		if (namespaces) {
-			let { DEBUG } = process.env;
-
-			DEBUG = DEBUG || '';
-
-			let split = (typeof namespaces === 'string' ? namespaces : '').split(/[\s,]+/);
-
-			for (let i = 0, { length } = split; i < length; i++) {
-				if (!split[i]) continue; // ignore empty strings
-				namespaces = split[i].replace(/\*/g, '.*?');
-				if (namespaces[0] === '-') {
-					DEBUG += ' ' + namespaces;
-				} else {
-					DEBUG += ' -' + namespaces;
-				}
-			}
-
-			debug.enable(DEBUG);
-		}
+	public info(formatter: any, ...args: Array<any>) {
+		this._infoLogger(formatter, ...args);
 	}
 
-	private log: debug.IDebugger;
-
-	constructor(private category: string) {
-		this.category = category.replace(/ /g, '-').toLowerCase();
-
-		this.log = debug(this.category);
+	public warn(formatter: any, ...args: Array<any>) {
+		this._warnLogger(formatter, ...args);
 	}
 
-	public info(text: string, metadata?: any) {
-		this.write('info', text, metadata);
+	public error(formatter: any, ...args: Array<any>) {
+		this._errorLogger(formatter, ...args);
 	}
 
-	public warn(text: string, metadata?: any) {
-		this.write('warn', text, metadata);
-	}
-
-	public debug(text: string, metadata?: any) {
-		this.write('debug', text, metadata);
-	}
-
-	public error(text: string, metadata?: any) {
-		this.write('error', text, metadata);
-	}
-
-	protected write(level: string, text: string, metadata: any) {
-		let now = new Date();
-		let date = dateStr(now, '-');
-		let time = timeStr(now);
-		let timestamp = `${ date } ${ time }`;
-		let mtext = '';
-
-		if (metadata) {
-			if (typeof(metadata) !== 'string') {
-				mtext = inspect(metadata, { showHidden: true, depth: null, colors: true });
-			}
-			else {
-				mtext = metadata;
-			}
-
-			mtext = `\n${ mtext }\n`;
-
-			mtext = `\n${dim(mtext.replace(/\n/g, '\n  '))}\n`;
-		}
-
-		if (this.log.enabled && lastCategory && lastCategory !== this.category)
-        console.log();
-
-		this.log(`${text}`, dim(timestamp), mtext);
-
-		lastCategory = this.category;
+	public debug(formatter: any, ...args: Array<any>) {
+		if (Logger.isDebug) this._debugLogger(formatter, ...args);
 	}
 }

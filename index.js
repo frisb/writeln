@@ -1,1 +1,1 @@
-module.exports = require('./lib').Writeln;
+module.exports = require('./lib').Logger;
