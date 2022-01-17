@@ -1,14 +1,14 @@
 {
   "name": "writeln",
   "description": "Simple console logger",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "contributors": [
     {
       "name": "Ash Brener",
       "url": "http://frisB.com"
     }
   ],
-  "main": "/",
+  "main": "/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
     "test": "jest",
